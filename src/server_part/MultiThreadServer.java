@@ -1,7 +1,6 @@
 package server_part;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -18,8 +17,17 @@ public class MultiThreadServer {
     static ExecutorService sPool = Executors.newFixedThreadPool(MAX_CLIENTS_NUMBER);
     static int sCurrClientNumb = 0;
     static ArrayList<MonoThreadClientHandler> sClientsThreads;
+    static private PersonData sPersonData = new PersonData();
+    static private MessageData sMessageData = new MessageData();
 
-    
+    public static PersonData getSPersonData() {
+        return sPersonData;
+    }
+
+    public static MessageData getSMessageData() {
+        return sMessageData;
+    }
+
     public static void main(String[] args) {
 
         // стартуємо сервер на порту 8080 та ініціалізуємо змінну 'br'
@@ -44,12 +52,17 @@ public class MultiThreadServer {
                     String serverCommand = br.readLine();
                     if (serverCommand.equalsIgnoreCase("exit")) {
                         System.out.println("Main Server initiate exiting...");
-                        server.close();
                         for (MonoThreadClientHandler cl: sClientsThreads){
-                            cl.getsInStream().close();
-                            cl.getsOutStream().close();
-                            cl.getsClientDialog().close();
+//                            cl.getsInStream().close();
+//                            cl.getsOutStream().close();
+//                            cl.getsClientDialog().close();
+                            cl.delClientThread();
                         }
+
+                        for (int i = 0; i < sCurrClientNumb; i++){
+                            sClientsThreads.remove(0);
+                        }
+                        server.close();
                         break;
                     }
                 }
@@ -79,13 +92,13 @@ public class MultiThreadServer {
                 System.out.println("Connection accepted.");
             }
 
+//             sPool.shutdownNow();
             // закриття пулу Threads після завершення роботи всіх Threads
-//            sExecuteIt.shutdownNow()
             sPool.shutdown();
 
         }
         catch (IOException e) {
-            System.out.println("Exception occurs");
+            System.out.println("Exception occurs:-1");
             e.printStackTrace();
         }
     }
