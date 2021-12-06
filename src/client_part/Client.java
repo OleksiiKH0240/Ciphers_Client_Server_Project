@@ -9,27 +9,39 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-import java.util.Scanner;
-
 
 public class Client {
+    private static InputStream sCustomInputStream = null;
     private static BufferedReader sBr;
+    private static OutputStream sCustomOutputStream = null;
+    private static Writer sWriter;
+//    private static DataOutputStream sDOS;
     private static DataOutputStream sOutStream;
     private static DataInputStream sInStream;
     private static Socket sSocket;
     private static Message sMsgType1;
     private static Message sMsgType2;
 
-    public static String createQuery(String clCmd, Message msg) {
+    public static void setSCustomInputStream(InputStream sCustomInputStream) {
+        Client.sCustomInputStream = sCustomInputStream;
+    }
+
+    public static void setSCustomOutputStream(OutputStream customOutputStream) {
+        Client.sCustomOutputStream = customOutputStream;
+    }
+
+    public static String createQuery(String clCmd, Message msg) throws IOException {
         String query = "";
         clCmd = clCmd.toLowerCase();
-        Scanner sc = new Scanner(System.in);
+//        Scanner sc = new Scanner(System.in);
 
         if (clCmd.equals("register") || clCmd.equals("login")) {
             System.out.println("input your name:");
-            String name = sc.nextLine();
+//            String name = sc.nextLine();
+            String name = sBr.readLine();
             System.out.println("input your password:");
-            String password = sc.nextLine();
+//            String password = sc.nextLine();
+            String password = sBr.readLine();
             query = "<tok>%s</tok> <tok>%s</tok> <tok>%s</tok>".formatted(clCmd, name, password);
         } else if (clCmd.equals("save")) {
             String encodedMessage;
@@ -37,9 +49,11 @@ public class Client {
             while (true) {
                 try {
                     System.out.println("input your name:");
-                    name = sc.nextLine();
+//                    name = sc.nextLine();
+                    name = sBr.readLine();
                     System.out.println("input message you would like to save on server(in one line):");
-                    String message = sc.nextLine();
+//                    String message = sc.nextLine();
+                    String message = sBr.readLine();
                     encodedMessage = msg.encodeMsg(message);
                     break;
                 } catch (NoSuchPaddingException e) {
@@ -60,7 +74,8 @@ public class Client {
                     "save", name, msg.getEncryptingType(), encodedMessage);
         } else if (clCmd.equals("load")) {
             System.out.println("input your name:");
-            String name = sc.nextLine();
+//            String name = sc.nextLine();
+            String name = sBr.readLine();
             query = "<tok>%s</tok> <tok>%s</tok>".formatted("load", name);
         }
 
@@ -133,15 +148,15 @@ public class Client {
         return errorsCount;
     }
 
-    public static Message chooseEncryptingType() {
+    public static Message chooseEncryptingType() throws IOException {
         Message msg = sMsgType1;
-        Scanner sc = new Scanner(System.in);
 
         System.out.println("Choose encryption algorithm:\n" +
                 "1- " + sMsgType1.getEncryptingType() + ", key size: " + sMsgType1.getMKeySize() + ";\n" +
                 "2- " + sMsgType2.getEncryptingType() + ", key size: " + sMsgType2.getMKeySize() + ".\n" +
                 "(1/2):");
-        Character mngChar = sc.nextLine().charAt(0);
+        String s = sBr.readLine();
+        Character mngChar = s.charAt(0);
         if (mngChar == '1') {
             msg = sMsgType1;
         } else if (mngChar == '2') {
@@ -153,11 +168,23 @@ public class Client {
         return msg;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         try {
             sSocket = new Socket("localhost", 8080);
 
-            sBr = new BufferedReader(new InputStreamReader(System.in));
+            //test case
+            if (sCustomInputStream != null) {
+                sBr = new BufferedReader(new InputStreamReader(sCustomInputStream));
+            } else {
+                sBr = new BufferedReader(new InputStreamReader(System.in));
+            }
+
+            //test case
+            if (sCustomOutputStream != null){
+                sWriter = new OutputStreamWriter(sCustomOutputStream, "UTF-8");
+//                sDOS = new DataOutputStream(sCustomFileOutputStream);
+            }
+
             sOutStream = new DataOutputStream(sSocket.getOutputStream());
             sInStream = new DataInputStream(sSocket.getInputStream());
 
@@ -166,7 +193,7 @@ public class Client {
             String query;
             String response;
 
-            Scanner sc = new Scanner(System.in);
+//            Scanner sc = new Scanner(System.in);
             sMsgType1 = new Message("RSA", 2048);
             sMsgType2 = new Message("AES/CBC/PKCS5Padding", 256);
 
@@ -177,7 +204,13 @@ public class Client {
             while (!sSocket.isOutputShutdown()) {
 
                 // чекаємо вводу даних у клієнтську консоль
+                System.out.println("commands:exit, register, login, save, load, choose algo");
+                System.out.println("input:");
                 clientCommand = sBr.readLine();
+//                test case
+                if (sCustomInputStream != null){
+                    System.out.println(clientCommand);
+                }
 
                 if (clientCommand.equalsIgnoreCase("exit")) {
                     System.out.println("Client kill connection");
@@ -202,15 +235,44 @@ public class Client {
 
                 response = responseHandler(response);
 
-                System.out.println(response);
+
+                //test case
+                if (sCustomOutputStream != null) {
+                    sWriter.append(response + "\n");
+                    sWriter.flush();
+//                    System.out.println(response);
+                } else{
+                    System.out.println(response);
+                }
+
+
+
+//                    sDOS.writeUTF(response + "\n");
+//                    sDOS.flush();
             }
 
             delClient();
+            sBr.close();
+            sCustomInputStream.close();
+
+            //test case
+            if (sCustomOutputStream != null) {
+                sWriter.close();
+                sCustomOutputStream.close();
+            }
 
         } catch (IOException | NoSuchAlgorithmException e) {
             System.out.println("Exception occurs");
             e.printStackTrace();
             delClient();
+            sBr.close();
+            sCustomInputStream.close();
+
+            //test case
+            if (sCustomOutputStream != null) {
+                sWriter.close();
+                sCustomOutputStream.close();
+            }
         }
 
     }

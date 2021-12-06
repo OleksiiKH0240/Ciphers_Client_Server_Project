@@ -1,0 +1,15 @@
+Forbidden option, you must log in first
+Forbidden option, you must log in first
+Forbidden option, you must log in first
+Forbidden option, you must log in first
+person was registered
+person with such name was existed, no need to register
+Login Failed
+Successfully Logged In
+Message was saved
+loaded, decoded message: 'hello world'
+Message was saved
+loaded, decoded message: 'acame ga kill'
+Message, with given name, was not found
+Message was saved
+loaded, decoded message: 'qwerty'

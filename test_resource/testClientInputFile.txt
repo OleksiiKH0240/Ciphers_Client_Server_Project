@@ -1,0 +1,45 @@
+1
+save
+alex
+qwerty
+load
+alex
+choose algo
+2
+save
+alex
+qwerty
+load
+alex
+register
+alex
+1111
+register
+alex
+1111
+login
+alex
+1110
+login
+alex
+1111
+save
+alex
+hello world
+load
+alex
+choose algo
+1
+save
+alex
+acame ga kill
+load
+alex
+load
+ale
+save
+ale
+qwerty
+load
+ale
+exit

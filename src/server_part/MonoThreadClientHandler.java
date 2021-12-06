@@ -38,8 +38,8 @@ public class MonoThreadClientHandler implements Runnable {
 
         // зменшуємо кількість активних клієнтів на 1,
         // видаляємо хендлер клієнта зі списку хендлерів на сервері
-//        MultiThreadServer.sCurrClientNumb -= 1;
-//        MultiThreadServer.sClientsThreads.remove(this);
+        MultiThreadServer.sCurrClientNumb -= 1;
+        MultiThreadServer.sClientsThreads.remove(this);
 
         // закриваємо спочатку канали сокету
         try{
@@ -119,7 +119,7 @@ public class MonoThreadClientHandler implements Runnable {
             tokens[3] = tokens[3].replace("</tok>", "");
             if (tokens[0].equals("save")){
                 if (!mIsLoggedIn){
-                    response = "Forbidden option, you must login first";
+                    response = "Forbidden option, you must log in first";
                     return response;
                 }
                 String name, encryptingType, message;
@@ -141,13 +141,18 @@ public class MonoThreadClientHandler implements Runnable {
         else if (query.matches("<tok>\\w+</tok> <tok>\\w+</tok>")){
 //            cases: load
             if (!mIsLoggedIn){
-                response = "Forbidden option, you must login first";
+                response = "Forbidden option, you must log in first";
                 return response;
             }
             String[] tokens = query.split("</tok> <tok>");
             String name = tokens[1].replace("</tok>", "");
             response = MultiThreadServer.getSMessageData().loadMessage(name);
-            response = "<tok>loaded</tok> " + response;
+            boolean state = !response.contains("InputOutputException")
+                    && !response.contains("FileNotFound")
+                    && !response.contains("Message, with given name, was not found");
+            if (state) {
+                response = "<tok>loaded</tok> " + response;
+            }
         }
 
         if (response.equals("")) response = query;
