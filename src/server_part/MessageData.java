@@ -122,7 +122,7 @@ public class MessageData {
      * load client`s message from /resource/MessagesFile.txt file or from file specified in constructor
      * @param name identifier of client`s encrypted message
      * @return
-     * client`s encrypted message with next form "<tok>encryptingType</tok> <tok>message</tok>", if all is ok
+     * client`s encrypted message with next form "{@literal<tok>}encryptingType{@literal</tok>} {@literal<tok>}message{@literal</tok>}", if all is ok
      * "Message, with given name, was not found", if there are no messages in file with name identifier
      * "FileNotFound", if file /resource/MessagesFile.txt or file that specified in constructor was not found
      * "InputOutputException", if there are some problems with reading file

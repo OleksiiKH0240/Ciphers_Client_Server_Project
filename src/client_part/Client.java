@@ -33,14 +33,14 @@ public class Client {
     /**
      *
      * @param clCmd client command
-     * @param msg
+     * @param msg Message object
      * @return special String which consists some tokens, with information about server's query,
      * or simple client command
      * query type:
-     * clCmd - register : query - '<tok>register</tok> <tok>name</tok> <tok>password</tok>';
-     * clCmd - login : query - '<tok>login</tok> <tok>name</tok> <tok>password</tok>';
-     * clCmd - save : query - '<tok>save</tok> <tok>name</tok> <tok>encryptingType</tok> <tok>message</tok>';
-     * clCmd - load : query - '<tok>load</tok> <tok>name</tok>';
+     * clCmd - register : query - '{@literal<tok>}register{@literal</tok>} {@literal<tok>}name{@literal</tok>} {@literal<tok>}password{@literal</tok>}';
+     * clCmd - login : query - '{@literal<tok>}login{@literal</tok>} {@literal<tok>}name{@literal</tok>} {@literal<tok>}password{@literal</tok>}';
+     * clCmd - save : query - '{@literal<tok>}save{@literal</tok>} {@literal<tok>}name{@literal</tok>} {@literal<tok>}encryptingType{@literal</tok>} {@literal<tok>}message{@literal</tok>}';
+     * clCmd - load : query - '{@literal<tok>}load{@literal</tok>} {@literal<tok>}name{@literal</tok>}';
      * where
      * name - identifier for message and client;
      * exit, register, login, save, load, choose algo - clients commands;
@@ -137,7 +137,7 @@ public class Client {
      * handle some server responses: [loaded_response,]
      * other server responses invoke no reaction.
      *
-     * loaded_response: string, which looking like '<tok>loaded</tok> <tok>encryptingType</tok> <tok>message</tok>',
+     * loaded_response: string, which looking like '{@literal<tok>}loaded{@literal</tok>} {@literal<tok>}encryptingType{@literal</tok>} {@literal<tok>}message{@literal</tok>}',
      * where
      * encryptingType is encrypting type method(RSA, AES), which was used to encrypt message;
      * message is some string, which was encrypted by user, using some encrypting algorithm.
