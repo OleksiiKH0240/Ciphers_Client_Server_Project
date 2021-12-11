@@ -1,6 +1,7 @@
 1
 save
 alex
+n
 qwerty
 load
 alex
@@ -8,6 +9,7 @@ choose algo
 2
 save
 alex
+n
 qwerty
 load
 alex
@@ -25,21 +27,36 @@ alex
 1111
 save
 alex
+n
 hello world
 load
 alex
+n
 choose algo
 1
 save
 alex
-acame ga kill
+n
+akame ga kill
 load
 alex
+n
 load
 ale
 save
 ale
+n
 qwerty
 load
 ale
+n
+load
+ale
+y
+save
+alex
+y
+load
+alex
+n
 exit

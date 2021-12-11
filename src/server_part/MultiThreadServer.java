@@ -10,6 +10,13 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * server class
+ * sPersonData: object of class {@link PersonData} that helps to save and load information about clients.
+ * sMessageData: object of class {@link MessageData} that helps to save and load message received from Client.
+ * sPool: object of class {@link ExecutorService} that manage all threads to multithreading of server.
+ * SERVER_TIMEOUT: time in milliseconds after which server.accept function give back control to the main function.
+ */
 public class MultiThreadServer {
     final static int SERVER_TIMEOUT = 1000;
     final static int MAX_CLIENTS_NUMBER = 2;
@@ -28,6 +35,11 @@ public class MultiThreadServer {
         return sMessageData;
     }
 
+    /**
+     * main function of MultiThreadServer class, with main conditionally endless cycle, in which you can interact with program
+     * and program(MultiThreadServer) can interact with MonoThreadClientHandler objects
+     * @param args
+     */
     public static void main(String[] args) {
 
         // стартуємо сервер на порту 8080 та ініціалізуємо змінну 'br'

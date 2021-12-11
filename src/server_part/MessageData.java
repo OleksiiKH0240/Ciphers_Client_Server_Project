@@ -4,6 +4,9 @@ import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * class to saving/loading client`s messages
+ */
 public class MessageData {
     private String mFilePath;
     private File mFile;
@@ -19,6 +22,7 @@ public class MessageData {
     }
 
     /**
+     * save client`s message in /resource/MessagesFile.txt file or in file specified in constructor
      * @param name           - identifier for data in 'MessagesFile.txt'
      * @param encryptingType - encrypting type of message, that server was given
      * @param message        - message, that server was given
@@ -114,6 +118,15 @@ public class MessageData {
         return 0;
     }
 
+    /**
+     * load client`s message from /resource/MessagesFile.txt file or from file specified in constructor
+     * @param name identifier of client`s encrypted message
+     * @return
+     * client`s encrypted message with next form "<tok>encryptingType</tok> <tok>message</tok>", if all is ok
+     * "Message, with given name, was not found", if there are no messages in file with name identifier
+     * "FileNotFound", if file /resource/MessagesFile.txt or file that specified in constructor was not found
+     * "InputOutputException", if there are some problems with reading file
+     */
     public String loadMessage(String name) {
         FileReader fr;
         try {

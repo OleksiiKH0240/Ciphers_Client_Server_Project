@@ -3,6 +3,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Prepare {
+    /**
+     * main function of Prepare class that do all needed before testing Client-Server application
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         //clear file MessagesFile.txt  before prepare function
         File f1 = new File("resource/MessagesFile.txt");
@@ -14,15 +19,17 @@ public class Prepare {
         FileWriter fw2 = new FileWriter(f2);
         fw2.close();
 
-
+        //create pool for ClientHandler and MultiThreadServerHandler Threads
         ExecutorService sPool = Executors.newFixedThreadPool(2);
 
         MultiThreadServerHandler serverThread = new MultiThreadServerHandler();
         sPool.execute(serverThread);
 
+        //create input stream from file with client`s commands for Client testing
         File cInputFile = new File("test_resource/testClientInputFile.txt");
         InputStream cInputStream = new FileInputStream(cInputFile);
 
+        //create output stream from file for server(MonoThreadClientHandler) and client(Client) responses
         File cOutputFile = new File("test_resource/testClientOutputFile.txt");
         OutputStream cOutputStream = new FileOutputStream(cOutputFile);
 

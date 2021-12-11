@@ -7,9 +7,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Tests {
+    /**
+     * run tests of Client-Server application
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
 
-
+        //correct server(MonoThreadClientHandler) and client(Client) responses for client`s command
+        // from test_resource/testClientInputFile.txt file
         List<String> checkClientFileContent;
         //get content of file 'testCheckClientOutputFile.txt'
         File f = new File("test_resource/testCheckClientOutputFile.txt");
@@ -20,8 +26,10 @@ public class Tests {
         bf.close();
         fr.close();
 
-        //get content of file 'testClientOutputFile.txt'
+        // server(MonoThreadClientHandler) and client(Client) responses for client`s command
+        // from test_resource/testClientInputFile.txt file, that we received
         List<String> clientFileContent;
+        //get content of file 'testClientOutputFile.txt'
         f = new File("test_resource/testClientOutputFile.txt");
         fr = new FileReader(f);
         bf = new BufferedReader(fr);
@@ -31,7 +39,7 @@ public class Tests {
         fr.close();
 
         for (int i = 0; i < checkClientFileContent.size(); i++){
-            System.out.println("test passed - " + check_arr[i].equals(arr[i]));
+            System.out.println((i + 1) + ") test passed - " + check_arr[i].equals(arr[i]));
         }
     }
 }

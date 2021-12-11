@@ -31,8 +31,11 @@ public class MonoThreadClientHandler implements Runnable {
 
     }
 
-    // закриває streams пов'язані з сокетом 'sClientDialog' та сам сокет, видаляє сокет зі списку сокетів
-    // та заменшує кількість активних скоетів на 1 в MultiThreadServer.java
+    /**
+     * закриває streams пов'язані з сокетом 'sClientDialog' та сам сокет, видаляє сокет зі списку сокетів
+     * та заменшує кількість активних скоетів на 1 в MultiThreadServer.java
+     * @return number of errors that occur during function running
+     */
     public int delClientThread() {
         int errorsCount = 0;
 
@@ -84,6 +87,25 @@ public class MonoThreadClientHandler implements Runnable {
         mIsLoggedIn = loggedIn;
     }
 
+    /**
+     * handle queries from client's and provides special response for some query types.
+     * query types: [register, login, save, load]
+     * @param query string of client`s query
+     * @return
+     * query, if query type is not in list above
+     * Register.registerPerson return, if query type is 'register';
+     *
+     * Login.loginPerson return, if query type is 'login';
+     *
+     * Message return, if query type is 'save';
+     * Message object save function return:
+     * "Forbidden option, you must log in first", if person that did not log in, try to use save option
+     * "Message was saved", if all is ok
+     * "FileNotFound", if file to save message was not found
+     * "Message was not saved, something went wrong", if something went wrong during message saving
+     *
+     * Message object load function return, if query type is 'load'
+     */
     public String queryHandler(String query){
 //        Pattern pattern = Pattern.compile("<tok>\\w+</tok> <tok>\\w+</tok> <tok>\\w+</tok> <tok>(.\\n{0,2})+</tok>");
 //        Matcher matcher = pattern.matcher(query);
@@ -159,6 +181,12 @@ public class MonoThreadClientHandler implements Runnable {
         return response;
     }
 
+    /**
+     * main function for MonoThreadClientHandler class with main conditionally endless cycle, in which you can interact with program
+     * and program(MonoThreadClientHandler) can interact with client(Client)
+     * function runs, when server create new Thread for MonoThreadClientHandler object,
+     * after client get successfully connected to server(MultiThreadServer)
+     */
     @Override
     public void run() {
 

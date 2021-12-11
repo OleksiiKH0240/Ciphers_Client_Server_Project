@@ -2,6 +2,9 @@ package server_part;
 
 import java.io.*;
 
+/**
+ * class to saving\loading client`s data(name, password)
+ */
 public class PersonData {
     private String mFilePath;
     private File mFile;
@@ -22,12 +25,12 @@ public class PersonData {
     }
 
     /**
-     *
+     * give person`s password by person`s name
      * @param name unique name of person
      * @return
      * password if all is ok;
      * empty String if Person with such name was not found;
-     * 'FileNotExist' if file does not exist.
+     * 'FileNotExist' if file of person`s strings does not exist.
      */
     public String getPersonPasswordByName(String name) {
         String password = "";
@@ -60,6 +63,7 @@ public class PersonData {
     }
 
     /**
+     * save person to the file /resource/PersonsFile.txt or to the file specified in constructor
      * @param name unique name of person
      * @param password password of person, that used to log in
      * @return
