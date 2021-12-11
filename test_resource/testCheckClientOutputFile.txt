@@ -9,7 +9,10 @@ Successfully Logged In
 Message was saved
 loaded, decoded message: 'hello world'
 Message was saved
-loaded, decoded message: 'acame ga kill'
+loaded, decoded message: 'akame ga kill'
 Message, with given name, was not found
+Message was saved
+loaded, decoded message: 'qwerty'
+loaded, decoded message: 'qwerty'
 Message was saved
 loaded, decoded message: 'qwerty'
