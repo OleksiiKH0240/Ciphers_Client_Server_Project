@@ -1,3 +1,7 @@
 .idea
 *.iml
 *.class
+*.log
+resource/MessagesFile.txt
+test_resource/testClientOutputFile.txt
+out/*
