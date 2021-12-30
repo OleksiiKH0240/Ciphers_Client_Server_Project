@@ -11,11 +11,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * server class
- * sPersonData: object of class {@link PersonData} that helps to save and load information about clients.
- * sMessageData: object of class {@link MessageData} that helps to save and load message received from Client.
- * sPool: object of class {@link ExecutorService} that manage all threads to multithreading of server.
- * SERVER_TIMEOUT: time in milliseconds after which server.accept function give back control to the main function.
+ * <p>server class</p>
+ * <p>sPersonData: object of class {@link PersonData} that helps to save and load information about clients.</p>
+ * <p>sMessageData: object of class {@link MessageData} that helps to save and load message received from Client.</p>
+ * <p>sPool: object of class {@link ExecutorService} that manage all threads to multithreading of server.</p>
+ * <p>SERVER_TIMEOUT: time in milliseconds after which server.accept function give back control to the main function.</p>
  */
 public class MultiThreadServer {
     final static int SERVER_TIMEOUT = 1000;
@@ -36,14 +36,14 @@ public class MultiThreadServer {
     }
 
     /**
-     * main function of MultiThreadServer class, with main conditionally endless cycle, in which you can interact with program
-     * and program(MultiThreadServer) can interact with MonoThreadClientHandler objects
+     * <p>main function of MultiThreadServer class, with main conditionally endless cycle, in which you can interact with program</p>
+     * <p>and program(MultiThreadServer) can interact with MonoThreadClientHandler objects</p>
      * @param args
      */
     public static void main(String[] args) {
 
-        // стартуємо сервер на порту 8080 та ініціалізуємо змінну 'br'
-        // для обробки консольних команд для самого сервера
+        // start the server on port 8080 and initialize the variable 'br'
+        // to process console commands for the server itself
         try (ServerSocket server = new ServerSocket(8080);
              BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
             server.setSoTimeout(SERVER_TIMEOUT);
@@ -52,23 +52,23 @@ public class MultiThreadServer {
             System.out.println("Server socket created, command console listen to server commands");
             System.out.println("Also server waiting to connect");
 
-            // стартуємо цикл за умови, що серверний сокет не закритий
+            // start the loop if server socket is not closed
             while (!server.isClosed()) {
 
-                // перевіряємо, чи отримував сервер команді з консолі
+                // check if server received commands from the console
                 if (br.ready()) {
                     System.out.println("Main Server found some messages in channel");
 
-                    // якщо отримали 'quit' то ініціалізуємо закриття сервера та
-                    //вихід із циклу роздачі 'threads' монопотокових серверів
+                    // if received 'quit' then initialize server closure and
+                    // exit form loop of creating new threads for MonoThreadClientHandler objects
                     String serverCommand = br.readLine();
                     if (serverCommand.equalsIgnoreCase("exit")) {
                         System.out.println("Main Server initiate exiting...");
                         for (MonoThreadClientHandler cl: sClientsThreads){
-//                            cl.getsInStream().close();
-//                            cl.getsOutStream().close();
-//                            cl.getsClientDialog().close();
-                            cl.delClientThread();
+                            cl.getMInStream().close();
+                            cl.getMOutStream().close();
+                            cl.getMClientDialog().close();
+//                            cl.delClientThread();
                         }
 
                         for (int i = 0; i < sCurrClientNumb; i++){
@@ -79,9 +79,9 @@ public class MultiThreadServer {
                     }
                 }
 
-                // якщо нічого не отримали чекаємо
-                // підключення до сокету під ім'ям - 'client' на
-                // серверной стороні
+                // if nothing is received we wait
+                // connect to a socket named - 'client' on
+                // server side
 
                 Socket client;
                 try {
@@ -91,11 +91,11 @@ public class MultiThreadServer {
                     else continue;
                 } catch (SocketTimeoutException e) {continue;}
 
-                // Після отримання запиту на підключення сервер створює сокет
-                // для спілкування з клієнтом та відправляє його в окремий Thread
-                // MonoThreadClientHandler і той
-                // продовжує спілкування від імені сервера
-//                int clientIdx = sCurrClientNumb;
+                // After receiving the connection request, the server creates a socket
+                // to communicate with the client and the MonoThreadClientHandler object, which sends to a separate Thread
+                // then the MonoThreadClientHandler object
+                // continues to communicate with client instead of server
+                // int clientIdx = sCurrClientNumb;
 
                 MonoThreadClientHandler clientThread = new MonoThreadClientHandler(client);
                 sClientsThreads.add(clientThread);
@@ -105,7 +105,7 @@ public class MultiThreadServer {
             }
 
 //             sPool.shutdownNow();
-            // закриття пулу Threads після завершення роботи всіх Threads
+            // close the Threads pool after all Threads have shut down
             sPool.shutdown();
 
         }

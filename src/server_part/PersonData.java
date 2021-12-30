@@ -28,9 +28,9 @@ public class PersonData {
      * give person`s password by person`s name
      * @param name unique name of person
      * @return
-     * password if all is ok;
-     * empty String if Person with such name was not found;
-     * 'FileNotExist' if file of person`s strings does not exist.
+     * <p>password if all is ok;</p>
+     * <p>empty String if Person with such name was not found;</p>
+     * <p>'FileNotExist' if file of person`s strings does not exist.</p>
      */
     public String getPersonPasswordByName(String name) {
         String password = "";
@@ -67,10 +67,10 @@ public class PersonData {
      * @param name unique name of person
      * @param password password of person, that used to log in
      * @return
-     * 0 if all is ok;
-     * 1 if exist person in file with same name;
-     * -1 if file does not exist.
-     * Person fill one row in the file 'PersonsFile.txt', which looks like 'PersonName:PersonPassword' .
+     * <p>0 if all is ok;</p>
+     * <p>1 if exist person in file with same name;</p>
+     * <p>-1 if file does not exist.</p>
+     * <p>Person fill one row in the file 'PersonsFile.txt', which looks like 'PersonName:PersonPassword' .</p>
      */
     public int savePerson(String name, String password) {
         BufferedReader br;

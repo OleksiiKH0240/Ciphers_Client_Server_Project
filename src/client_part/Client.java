@@ -35,17 +35,17 @@ public class Client {
      * @param clCmd client command
      * @param msg Message object
      * @return special String which consists some tokens, with information about server's query,
-     * or simple client command
-     * query type:
-     * clCmd - register : query - '{@literal<tok>}register{@literal</tok>} {@literal<tok>}name{@literal</tok>} {@literal<tok>}password{@literal</tok>}';
-     * clCmd - login : query - '{@literal<tok>}login{@literal</tok>} {@literal<tok>}name{@literal</tok>} {@literal<tok>}password{@literal</tok>}';
-     * clCmd - save : query - '{@literal<tok>}save{@literal</tok>} {@literal<tok>}name{@literal</tok>} {@literal<tok>}encryptingType{@literal</tok>} {@literal<tok>}message{@literal</tok>}';
-     * clCmd - load : query - '{@literal<tok>}load{@literal</tok>} {@literal<tok>}name{@literal</tok>}';
-     * where
-     * name - identifier for message and client;
-     * exit, register, login, save, load, choose algo - clients commands;
-     * encryptingType - encrypting type method(RSA, AES), which was used to encrypt message;
-     * message - some string, which was encrypted by user, using some encrypting algorithm.
+     * <p>or simple client command</p>
+     * <p>query type:</p>
+     * <p>clCmd - register : query - '{@literal<tok>}register{@literal</tok>} {@literal<tok>}name{@literal</tok>} {@literal<tok>}password{@literal</tok>}';</p>
+     * <p>clCmd - login : query - '{@literal<tok>}login{@literal</tok>} {@literal<tok>}name{@literal</tok>} {@literal<tok>}password{@literal</tok>}';</p>
+     * <p>clCmd - save : query - '{@literal<tok>}save{@literal</tok>} {@literal<tok>}name{@literal</tok>} {@literal<tok>}encryptingType{@literal</tok>} {@literal<tok>}message{@literal</tok>}';</p>
+     * <p>clCmd - load : query - '{@literal<tok>}load{@literal</tok>} {@literal<tok>}name{@literal</tok>}';</p>
+     * <p>where</p>
+     * <p>name - identifier for message and client;</p>
+     * <p>exit, register, login, save, load, choose algo - clients commands;</p>
+     * <p>encryptingType - encrypting type method(RSA, AES), which was used to encrypt message;</p>
+     * <p>message - some string, which was encrypted by user, using some encrypting algorithm.</p>
      * @throws IOException
      */
     public static String createQuery(String clCmd, Message msg) throws IOException {
@@ -134,14 +134,14 @@ public class Client {
      *
      * @param response server response
      * @return server response in case it not in list below, or some custom object according to server response that received.
-     * handle some server responses: [loaded_response,]
-     * other server responses invoke no reaction.
+     * <p>handle some server responses: [loaded_response,]</p>
+     * <p>other server responses invoke no reaction.</p>
      *
-     * loaded_response: string, which looking like '{@literal<tok>}loaded{@literal</tok>} {@literal<tok>}encryptingType{@literal</tok>} {@literal<tok>}message{@literal</tok>}',
-     * where
-     * encryptingType is encrypting type method(RSA, AES), which was used to encrypt message;
-     * message is some string, which was encrypted by user, using some encrypting algorithm.
-     * returned object in case of loaded_response is decrypted message of server response
+     * <p>loaded_response: string, which looking like '{@literal<tok>}loaded{@literal</tok>} {@literal<tok>}encryptingType{@literal</tok>} {@literal<tok>}message{@literal</tok>}',</p>
+     * <p>where</p>
+     * <p>encryptingType is encrypting type method(RSA, AES), which was used to encrypt message;</p>
+     * <p>message is some string, which was encrypted by user, using some encrypting algorithm.</p>
+     * <p>returned object in case of loaded_response is decrypted message of server response</p>
      */
     public static String responseHandler(String response) {
         String modResponse = "";
@@ -204,10 +204,9 @@ public class Client {
      * close clients streams linked with socket 'sSocket' and socket itself
      * @return
      */
-    // закриває streams пов'язані з сокетом 'sSocket' та сам сокет
     public static int delClient() {
         int errorsCount = 0;
-        // закриваємо спочатку канали сокету
+        // close socket`s streams first
         try {
             sInStream.close();
         } catch (IOException e) {
@@ -219,7 +218,7 @@ public class Client {
             errorsCount++;
         }
 
-        // потім закриваємо сам сокет 'sSocket' спілкування з сервером
+        // then close socket 'sSocket' itself
         try {
             sSocket.close();
         } catch (IOException e) {
@@ -257,8 +256,8 @@ public class Client {
     }
 
     /**
-     * main function of Client class, with main conditionally endless cycle, in which you can interact with program
-     * and program(Client) can interact with MonoThreadClientHandler object
+     * <p>main function of Client class, with main conditionally endless cycle, in which you can interact with program</p>
+     * <p>and program(Client) can interact with MonoThreadClientHandler object</p>
      * @param args
      * @throws IOException throws if there are some problems with sBr\sWriter\sOutStream\sInStream static variables
      * or with input\output streams of class Client
@@ -295,10 +294,10 @@ public class Client {
             Message msg = Client.chooseEncryptingType();
 
 
-            // перевіряємо чи живий канал і працюємо якщо живий
+            // check if the channel is live and work if it is alive
             while (!sSocket.isOutputShutdown()) {
 
-                // чекаємо вводу даних у клієнтську консоль
+                // wait for data entry into the client console
                 System.out.println("commands:exit, register, login, save, load, choose algo");
                 System.out.println("input:");
                 clientCommand = sBr.readLine();
@@ -309,6 +308,9 @@ public class Client {
 
                 if (clientCommand.equalsIgnoreCase("exit")) {
                     System.out.println("Client kill connection");
+                    sOutStream.writeUTF(clientCommand);
+                    sOutStream.flush();
+                    delClient();
                     break;
                 } else if (clientCommand.equals("choose algo")) {
                     Client.chooseEncryptingType();
@@ -317,14 +319,14 @@ public class Client {
 
                 query = createQuery(clientCommand, msg);
 
-                // пишемо опрацьовані дані з клієнтської консолі
-                // в канал сокету клієнта для сервера
+                // we write the processed data from the client console
+                // to the client socket channel for the server
                 sOutStream.writeUTF(query);
                 System.out.println("Client sent message '" + query + "' to server.");
                 sOutStream.flush();
 
 
-                // чекаємо на те, що нам відповість сервер на повідомлення
+                // waiting for server reply
                 System.out.println("waiting for reply...");
                 response = sInStream.readUTF();
 
@@ -345,10 +347,8 @@ public class Client {
 //                    sDOS.writeUTF(response + "\n");
 //                    sDOS.flush();
             }
-
-            delClient();
             sBr.close();
-            sCustomInputStream.close();
+//            sCustomInputStream.close();
 
             //test case
             if (sCustomOutputStream != null) {
@@ -361,7 +361,7 @@ public class Client {
             e.printStackTrace();
             delClient();
             sBr.close();
-            sCustomInputStream.close();
+//            sCustomInputStream.close();
 
             //test case
             if (sCustomOutputStream != null) {

@@ -21,30 +21,31 @@ public class MonoThreadClientHandler implements Runnable {
 
     public MonoThreadClientHandler(Socket client) throws IOException {
         mClientDialog = client;
-        // ініціюємо streams для обміну інформацією між сервером та сокетом 'sClientDialog'
+        // initiate streams to exchange information between the server and the 'sClientDialog' socket
 
-        // stream запису до сокету
+        // stream for writing in socket
         mOutStream = new DataOutputStream(mClientDialog.getOutputStream());
 
-        // stream читання з сокету
+        // stream for reading from socket
         mInStream = new DataInputStream(mClientDialog.getInputStream());
 
     }
 
     /**
-     * закриває streams пов'язані з сокетом 'sClientDialog' та сам сокет, видаляє сокет зі списку сокетів
-     * та заменшує кількість активних скоетів на 1 в MultiThreadServer.java
+     * <p>closes the streams associated with the 'sClientDialog' socket and the socket itself,</p>
+     * <p>removes the socket from the socket list</p>
+     * <p>and reduces the number of active sockets by 1 in MultiThreadServer.java</p>
      * @return number of errors that occur during function running
      */
     public int delClientThread() {
         int errorsCount = 0;
 
-        // зменшуємо кількість активних клієнтів на 1,
-        // видаляємо хендлер клієнта зі списку хендлерів на сервері
+        // reduce the number of active customers by 1,
+        // remove the client handler from the list of handlers on the server
         MultiThreadServer.sCurrClientNumb -= 1;
         MultiThreadServer.sClientsThreads.remove(this);
 
-        // закриваємо спочатку канали сокету
+        // close the socket streams first
         try{
             mInStream.close();
         }
@@ -58,7 +59,7 @@ public class MonoThreadClientHandler implements Runnable {
             errorsCount++;
         }
 
-        // потім закриваємо сам сокет 'sClientDialog' спілкування з сервером
+        // then close the socket 'sClientDialog' communication socket
         try {
             mClientDialog.close();
         }
@@ -88,23 +89,25 @@ public class MonoThreadClientHandler implements Runnable {
     }
 
     /**
-     * handle queries from client's and provides special response for some query types.
-     * query types: [register, login, save, load]
+     * <p>handle queries from client's and provides special response for some query types.</p>
+     * <p>query types: [register, login, save, load]</p>
      * @param query string of client`s query
      * @return
-     * query, if query type is not in list above
-     * Register.registerPerson return, if query type is 'register';
+     * <p>query, if query type is not in list above</p>
      *
-     * Login.loginPerson return, if query type is 'login';
+     * <p>Register.registerPerson return, if query type is 'register';</p>
      *
-     * Message return, if query type is 'save';
-     * Message object save function return:
-     * "Forbidden option, you must log in first", if person that did not log in, try to use save option
-     * "Message was saved", if all is ok
-     * "FileNotFound", if file to save message was not found
-     * "Message was not saved, something went wrong", if something went wrong during message saving
+     * <p>Login.loginPerson return, if query type is 'login';</p>
      *
-     * Message object load function return, if query type is 'load'
+     * <p>Message return, if query type is 'save';</p>
+     *
+     * <p>Message object save function return:</p>
+     * <p>"Forbidden option, you must log in first", if person that did not log in, try to use save option</p>
+     * <p>"Message was saved", if all is ok</p>
+     * <p>"FileNotFound", if file to save message was not found</p>
+     * <p>"Message was not saved, something went wrong", if something went wrong during message saving</p>
+     *
+     * <p>Message object load function return, if query type is 'load'</p>
      */
     public String queryHandler(String query){
 //        Pattern pattern = Pattern.compile("<tok>\\w+</tok> <tok>\\w+</tok> <tok>\\w+</tok> <tok>(.\\n{0,2})+</tok>");
@@ -182,23 +185,23 @@ public class MonoThreadClientHandler implements Runnable {
     }
 
     /**
-     * main function for MonoThreadClientHandler class with main conditionally endless cycle, in which you can interact with program
-     * and program(MonoThreadClientHandler) can interact with client(Client)
-     * function runs, when server create new Thread for MonoThreadClientHandler object,
-     * after client get successfully connected to server(MultiThreadServer)
+     * <p>main function for MonoThreadClientHandler class with main conditionally endless cycle, in which you can interact with program</p>
+     * <p>and program(MonoThreadClientHandler) can interact with client(Client)</p>
+     * <p>function runs, when server create new Thread for MonoThreadClientHandler object,</p>
+     * <p>after client get successfully connected to server(MultiThreadServer)</p>
      */
     @Override
     public void run() {
 
         try {
 
-            // рядок з інформацією для сокету клієнта
+            // string with information for client's socket
             String response;
 
-            // рядок з інформацією від сокета клієнта
+            // string with information from client's socket
             String query;
 
-            // обмінюємося інформацією з сокетом клієнта поки він не закрився
+            // exchange information with client's socket, until it closes
             while (!mClientDialog.isClosed()) {
                 query = this.mInStream.readUTF();
 
@@ -217,7 +220,7 @@ public class MonoThreadClientHandler implements Runnable {
                 System.out.println(response);
                 mOutStream.writeUTF(response);
 
-                // відправляє повідомлення не чекаючи наповнення буфера
+                // sends a message without waiting for the buffer to fill
                 mOutStream.flush();
 
             }
@@ -229,4 +232,6 @@ public class MonoThreadClientHandler implements Runnable {
         }
 
     }
+
+
 }
