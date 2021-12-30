@@ -2,6 +2,6 @@
 *.iml
 *.class
 *.log
-resource/MessagesFile.txt
+resource
 test_resource/testClientOutputFile.txt
-out/*
+out
