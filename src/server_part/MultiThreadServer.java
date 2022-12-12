@@ -44,7 +44,7 @@ public class MultiThreadServer {
 
         // start the server on port 8080 and initialize the variable 'br'
         // to process console commands for the server itself
-        try (ServerSocket server = new ServerSocket(8080);
+        try (ServerSocket server = new ServerSocket(80);
              BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
             server.setSoTimeout(SERVER_TIMEOUT);
             sClientsThreads = new ArrayList<>();

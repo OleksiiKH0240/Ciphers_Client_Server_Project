@@ -264,7 +264,7 @@ public class Client {
      */
     public static void main(String[] args) throws IOException {
         try {
-            sSocket = new Socket("localhost", 8080);
+            sSocket = new Socket("localhost", 80);
 
             //test case
             if (sCustomInputStream != null) {
